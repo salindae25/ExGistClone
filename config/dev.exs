@@ -6,6 +6,7 @@ config :gist_clone, GistClone.Repo,
   password: "postgres",
   hostname: "localhost",
   database: "gist_clone_dev",
+  port: 5432,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
