@@ -1,32 +1,122 @@
-<header class="px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
-    <div class="flex items-center gap-4">
-      <a href="/">
-        <img src={~p"/images/logo.svg"} width="36" />
-      </a>
-      <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6">
-        v<%= Application.spec(:phoenix, :vsn) %>
-      </p>
+<header class="flex justify-between item-center px-6 py-3 bg-emDark">
+  <div class="flex relative items-center">
+    <a href={~p"/"}>
+      <img src="/images/gist-logo.svg" alt="logo" class="h-8 w-auto" />
+    </a>
+    <a href={~p"/"} class="mr-6">
+      <div class="text-white font-brand font-bold text-3xl">Gist</div>
+    </a>
+    <div class="px-3 flex item-center gap-3">
+      <input
+        class="focus:outline-none border focus:border-emLavender 
+        focus:right-0  border-white bg-emDark-dark  
+        rounded-xl  text-white placeholder-emDark-light text-sm"
+        placeholder="Search..."
+        type="text"
+        name=""
+      />
+      <button class="text-white text-base font-brand font-bold hover:text-emDrak-light">
+        All gists
+      </button>
     </div>
-    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <a href="https://twitter.com/elixirphoenix" class="hover:text-zinc-700">
-        @elixirphoenix
-      </a>
-      <a href="https://github.com/phoenixframework/phoenix" class="hover:text-zinc-700">
-        GitHub
-      </a>
-      <a
-        href="https://hexdocs.pm/phoenix/overview.html"
-        class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80"
+  </div>
+  <div class="relative flex gap-1 item-center">
+    <details class=" transition ease-out duration-300" id="dropdown_menu_container">
+      <summary type="button" id="user-menu-button" class="img-down-arrow">
+        <img
+          src="/images/user-image.svg"
+          class="h-8 w-8 rounded-[50%] p-1 border-[1.5px] border-white"
+          alt="profile image"
+        />
+      </summary>
+      <div
+        class="absolute right-0 top-6 p-2 shadow bg-emDark rounded-lg w-48 border flex flex-col text-white border-white"
+        id="dropdown-menu"
+        phx-click-away={JS.remove_attribute("open", to: "#dropdown_menu_container")}
       >
-        Get Started <span aria-hidden="true">&rarr;</span>
-      </a>
-    </div>
+        <%= if @current_user do %>
+          <.link
+            href="#"
+            class="border-b border-white border-opacity-50 py-2"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-2"
+          >
+            Signed in as <%= @current_user.email %>
+          </.link>
+
+          <.link
+            href="#"
+            class="pt-2"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-3"
+          >
+            Your gist
+          </.link>
+
+          <.link
+            href="#"
+            class="border-b border-white border-opacity-50 pb-2 pt-1"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-4"
+          >
+            Saved gist
+          </.link>
+          <.link
+            href={~p"/users/log_out"}
+            class="py-2"
+            role="menuitem"
+            tabindex="-1"
+            method="delete"
+            id="user-menu-item-5"
+          >
+            Sign out
+          </.link>
+        <% else %>
+          <.link
+            href={~p"/users/log_in"}
+            class="border-b border-white border-opacity-50 py-2"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-0"
+          >
+            Sign in
+          </.link>
+          <.link
+            href={~p"/users/register"}
+            class="py-2"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-1"
+          >
+            Register
+          </.link>
+        <% end %>
+      </div>
+    </details>
   </div>
 </header>
-<main class="px-4 py-20 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-2xl">
-    <.flash_group flash={@flash} />
-    <%= @inner_content %>
-  </div>
+<main>
+  <.flash_group flash={@flash} />
+  <%= @inner_content %>
 </main>
+<footer class="h-[120px] w-full flex item-center text-white px-16 py-4 absolute bottom-0 font-brand font-regular text-sm">
+  <div class="w-full px-2 py-4 border-t border-white flex items-center gap-8 ">
+    <div class="flex gap-4 items-center">
+      <img src="/images/gist-logo.svg" alt="logo" class="h-7 w-auto" />
+      <span> @ 2023 Stech LLC</span>
+    </div>
+    <ul class="flex gap-3 text-emLavender-dark items-center">
+      <li><a href={~p"/"} class="hover:underline">Terms</a></li>
+      <li><a href={~p"/"} class="hover:underline">Privacy</a></li>
+      <li><a href={~p"/"} class="hover:underline">About</a></li>
+    </ul>
+  </div>
+</footer>
