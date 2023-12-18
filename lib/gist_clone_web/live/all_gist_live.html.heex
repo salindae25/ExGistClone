@@ -1,0 +1,35 @@
+<div class="flex w-full mt-20 font-brand flex-col px-20 gap-20">
+  <%= for gist <- @gists do %>
+    <div>
+      <div class="flex px-2 py-4 font-regular text-sm item-center  bg-emDark rounded-t-md border border-b-0 h-14 border-white">
+        <span class="text-white px-5">
+          ../<%= gist.name %>
+        </span>
+        <div class="flex ml-auto gap-4 px-4">
+          <%= if gist.user_id== @current_user.id do %>
+            <button phx-click={JS.push("delete", value: %{id: gist.id})}>
+              <.icon name="hero-trash" class="w-5 h-5 bg-red-500" />
+            </button>
+          <% end %>
+
+          <a href={~p"/gist?#{[id: gist.id]}"}>
+            <.icon name="hero-eye" class="w-5 h-5 bg-white" />
+          </a>
+        </div>
+      </div>
+      <div
+        id={"highlighted-code-area-" <> gist.id}
+        phx-update="ignore"
+        phx-hook="HighlightText"
+        class="max-h-[200px] overflow-hidden border border-white flex w-full flex-col rounded-b-md"
+        data-name={gist.name}
+      >
+        <pre class="flex w-full">
+        <code class="language-elixir w-full">
+        <%= gist.markup_text %>
+        </code>
+      </pre>
+      </div>
+    </div>
+  <% end %>
+</div>

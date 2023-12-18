@@ -1,0 +1,19 @@
+<div class="flex w-full mt-20 font-brand flex-col px-20">
+  <div class="flex px-2 py-4 font-regular text-sm item-center  bg-emDark rounded-t-md border border-b-0 h-14 border-white">
+    <span class="text-white px-5">
+      ../<%= @gist.name %>
+    </span>
+  </div>
+  <div
+    id="highlighted-code-area"
+    phx-hook="HighlightText"
+    class="max-h-[500px] overflow-auto border border-white flex w-full flex-col rounded-b-md"
+    data-name={@gist.name}
+  >
+    <pre class="flex w-full">
+        <code class="language-elixir w-full">
+        <%= @gist.markup_text %>
+        </code>
+      </pre>
+  </div>
+</div>

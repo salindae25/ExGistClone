@@ -22,6 +22,20 @@ defmodule GistClone.Gists do
   end
 
   @doc """
+  Returns the list of gists.
+
+  ## Examples
+
+      iex> list_gists()
+      [%Gist{}, ...]
+
+  """
+  def list_gists(%{"id" => id}) do
+    query = from(g in Gist, where: g.user_id == ^id, select: [:name, :markup_text, :description])
+    Repo.all(query)
+  end
+
+  @doc """
   Gets a single gist.
 
   Raises `Ecto.NoResultsError` if the Gist does not exist.

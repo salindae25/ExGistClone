@@ -10,8 +10,18 @@
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css"
+    />
   </head>
-  <body class="bg-emDark-dark antialiased">
+  <body class="bg-emDark-dark antialiased overflow-auto max-h-[100vh]">
     <%= @inner_content %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js">
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/highlightjs-line-numbers.js/dist/highlightjs-line-numbers.min.js"
+    >
+    </script>
   </body>
 </html>

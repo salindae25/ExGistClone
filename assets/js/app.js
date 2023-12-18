@@ -18,12 +18,60 @@
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
+
 import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+
+if (hljs.initLineNumbersOnLoad) {
+    hljs.initLineNumbersOnLoad();
+}
 let Hooks = {}
+Hooks.HighlightText = {
+    mounted() {
+        console.log(this.el.id);
+        const name = this.el.getAttribute("data-name")
+        const highlightedCodeArea = document.querySelector(`#${this.el.id} pre code`)
+        if (name && highlightedCodeArea) {
+            highlightedCodeArea.className = highlightedCodeArea.className.replace(/language-\S+/g, "")
+            highlightedCodeArea.classList.add(`language-${this.getSyntaxType(name)}`)
+            hljs.highlightElement(highlightedCodeArea)
+            if (hljs.initLineNumbersOnLoad) {
+                hljs.initLineNumbersOnLoad();
+            }
+        }
+    },
+    getSyntaxType(name) {
+        const extension = name ? name.split('.').pop() : 'ex'
+        switch (extension) {
+            case 'txt':
+                return "text"
+                break;
+            case 'html':
+                return "html"
+                break;
+            case 'heex':
+                return "html"
+                break;
+            case "json":
+                return "json"
+                break
+            case "css":
+                return "css"
+            case 'js':
+                return "javascript"
+                break;
+            case "ex":
+                return "elixir"
+            default:
+                return "elixir"
+                break;
+        }
+    }
+}
 Hooks.UpdateLineNumber = {
     mounted() {
 
