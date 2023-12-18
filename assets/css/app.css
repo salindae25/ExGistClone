@@ -17,6 +17,40 @@
   font-style: normal;
 }
 
+.em-gradient {
+  background-image: linear-gradient(to bottom, #631A61, #551653, #340E33, #010101);
+  min-height: 225px;
+}
+
+form input[type="text"] {
+  @apply bg-emDark-dark text-white text-sm border border-white
+}
+
+form input[type="text"]:focus {
+  @apply focus:outline-none focus:border-emLavender-dark focus:ring-0
+}
+
+form textarea {
+  @apply bg-emDark-dark font-regular text-white border border-white h-[300px] resize-none;
+  border-top: none;
+}
+
+form textarea:focus {
+  @apply focus:outline-none focus:border-white focus:ring-0
+}
+
+form .create_button {
+  @apply bg-emPurple border border-white font-regular text-black text-base
+}
+
+form .create_button:focus {
+  @apply focus:bg-emPurple-dark focus:border-emLavender-dark focus:text-white
+}
+
+form .create_button:hover {
+  @apply hover:bg-emPurple-dark hover:border-emLavender-dark hover:text-white
+}
+
 .round-image-padding {
   border-radius: 50%;
   border: 1.5px solid #ffffff;

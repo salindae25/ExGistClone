@@ -18,15 +18,49 @@
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
-import {Socket} from "phoenix"
-import {LiveSocket} from "phoenix_live_view"
+import { Socket } from "phoenix"
+import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let Hooks = {}
+Hooks.UpdateLineNumber = {
+    mounted() {
+
+        const lineNumberElement = document.querySelector("#line-number")
+        this.el.addEventListener("input", () => {
+            this.updateLineNumber(this.el.value)
+        })
+        this.el.addEventListener("scroll", () => {
+            if (!lineNumberElement) return;
+            lineNumberElement.scrollTop = this.el.scrollTop
+        })
+        this.el.addEventListener("keydown", (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                insertTabCharacter(this.el)
+            }
+        })
+        this.handleEvent("clear-textarea", () => {
+            this.el.value = ""
+            if (!lineNumberElement) return;
+            lineNumberElement.textContent = "1\n"
+        })
+
+        this.updateLineNumber(this.el.value)
+    },
+    updateLineNumber(value) {
+        const lineNumberElement = document.querySelector("#line-number")
+        if (!lineNumberElement) return;
+
+        const lines = value.split('\n')
+        lineNumberElement.textContent = lines.map((x, i) => `${i + 1}`).join('\n')
+    }
+}
+let liveSocket = new LiveSocket("/live", Socket, { params: { _csrf_token: csrfToken }, hooks: Hooks })
 
 // Show progress bar on live navigation and form submits
-topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
+topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 
@@ -39,3 +73,12 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+function insertTabCharacter(elem) {
+    const { value, selectionStart, selectionEnd } = elem;
+
+    // Insert tab character
+    elem.value = `${value.substring(0, selectionEnd)}\t${value.substring(selectionEnd)}`;
+
+    // Move cursor to new position
+    elem.selectionStart = elem.selectionEnd = selectionEnd + 1;
+}

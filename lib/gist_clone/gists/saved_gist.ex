@@ -5,8 +5,8 @@ defmodule GistClone.Gists.SavedGist do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "saved_gists" do
-    belongs_to :users, GistClone.Account.User
-    belongs_to :gists, GistClone.Gist.Gist
+    belongs_to :user, GistClone.Account.User
+    belongs_to :gist, GistClone.Gists.Gist
     timestamps(type: :utc_datetime)
   end
 
