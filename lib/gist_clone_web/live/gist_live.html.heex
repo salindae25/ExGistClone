@@ -1,19 +1,107 @@
-<div class="flex w-full mt-20 font-brand flex-col px-20">
-  <div class="flex px-2 py-4 font-regular text-sm item-center  bg-emDark rounded-t-md border border-b-0 h-14 border-white">
-    <span class="text-white px-5">
-      ../<%= @gist.name %>
+<div
+  class="flex w-full px-20 em-gradient pt-8 items-start"
+  style="padding-inline:clamp(80px, 15%, 15rem)"
+>
+  <div class="flex w-full gap-3 items-start">
+    <img
+      src="/images/user-image.svg"
+      class="h-10 w-10 rounded-[50%] p-1 border-[1.5px] mt-1 border-white"
+      alt="profile image"
+    />
+    <div class="flex flex-col">
+      <span class="text-emLavender-dark text-lg flex items-center  font-bold">
+        <span><%= String.split(@gist.user.email, "@") |> hd %></span>
+        <span class="text-white px-1">/</span>
+        <span><%= @gist.name %></span>
+      </span>
+      <span
+        id="date-update"
+        phx-hook="DateHumanize"
+        data-date={@gist.updated_at}
+        phx-update="ignore"
+        class="text-white font-bold text-lg"
+      >
+        <%= @gist.updated_at %>
+      </span>
+      <span class="text-white text-sm font-regular capitalize"><%= @gist.description %></span>
+    </div>
+  </div>
+  <div class="h-9 flex align-top border border-white  text-white items-center rounded-md divide-x-2">
+    <button
+      phx-click={JS.push("save", value: %{id: @gist.id})}
+      class={
+      "px-4 py-2 flex items-center gap-2 rounded-l-md"
+    <> (if @has_saved_gist do " brightness-50" else "" end)
+      }
+    >
+      <.icon name="hero-bookmark" class="w-5 h-5 " /> Save
+    </button>
+    <span class="flex w-9 justify-center">
+      <%= @saved_count %>
     </span>
   </div>
+</div>
+<div
+  class="flex w-full font-brand flex-col px-20 pb-36"
+  style="padding-inline:clamp(80px, 15%, 15rem)"
+>
+  <div class="flex px-2 py-4 font-regular text-sm  item-center  bg-emDark rounded-t-md border border-b-0 h-14 border-white">
+    <span class="text-emLavender-dark px-5 text-lg font-bold">
+      <%= @gist.name %>
+    </span>
+
+    <div class="flex ml-auto gap-4 px-4 items-center">
+      <%= if @gist.user_id== @current_user.id do %>
+        <button phx-click={JS.push("delete", value: %{id: @gist.id})}>
+          <.icon name="hero-trash" class="w-5 h-5 bg-red-500" />
+        </button>
+
+        <a
+          href={~p"/edit?#{[id: @gist.id]}"}
+          class="text-white active:rounded-3xl p-1 active:bg-emDark-dark"
+        >
+          <.icon name="hero-pencil" class="w-5 h-5 " />
+        </a>
+      <% end %>
+
+      <button
+        onclick="addToClipBorad()"
+        class="text-white active:rounded-3xl p-1 active:bg-emDark-dark"
+      >
+        <.icon name="hero-clipboard" class="w-5 h-5  active:bg-white " />
+      </button>
+    </div>
+  </div>
+
   <div
     id="highlighted-code-area"
     phx-hook="HighlightText"
-    class="max-h-[500px] overflow-auto border border-white flex w-full flex-col rounded-b-md"
+    class=" border border-white flex w-full overflow-x-hidden  rounded-b-md"
     data-name={@gist.name}
+    data-code={@gist.markup_text}
+    phx-update="ignore"
   >
-    <pre class="flex w-full">
-        <code class="language-elixir w-full">
+    <textarea
+      id="line-number"
+      class="min-w-[54px] w-[54px] rounded-bl-md border-r-0 bg-[#0d1117] text-emDark-light text-right overflow-hidden"
+      readonly
+      resize="off"
+    >
+          <%= "1\n" %>
+    </textarea>
+    <pre class="flex w-full text-white">
+        <code id={"code-tag"<> @gist.id} class="language-elixir w-full" phx-hook="UpdateLineNumber" data-line="line-number">
+
         <%= @gist.markup_text %>
+
         </code>
       </pre>
   </div>
 </div>
+
+<script>
+  function addToClipBorad(){
+  const codeText = document.querySelector("#highlighted-code-area").getAttribute("data-code")
+  navigator.clipboard.writeText(codeText)
+  }
+</script>

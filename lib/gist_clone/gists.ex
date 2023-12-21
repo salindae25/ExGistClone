@@ -21,6 +21,18 @@ defmodule GistClone.Gists do
     Repo.all(Gist)
   end
 
+  def list_gists(user_id) do
+    Gist
+    |> where([g], g.user_id == ^user_id)
+    |> preload(:user)
+    |> Repo.all()
+  end
+
+  def list_gists_with_user do
+    Repo.all(Gist)
+    |> Repo.preload(:user)
+  end
+
   @doc """
   Returns the list of gists.
 
@@ -33,6 +45,11 @@ defmodule GistClone.Gists do
   def list_gists(%{"id" => id}) do
     query = from(g in Gist, where: g.user_id == ^id, select: [:name, :markup_text, :description])
     Repo.all(query)
+  end
+
+  def get_gist_with_all!(id) do
+    Repo.get!(Gist, id)
+    |> Repo.preload([:user])
   end
 
   @doc """
@@ -212,5 +229,25 @@ defmodule GistClone.Gists do
   """
   def change_saved_gist(%SavedGist{} = saved_gist, attrs \\ %{}) do
     SavedGist.changeset(saved_gist, attrs)
+  end
+
+  def count_of_saved_gist_per_gist(id) do
+    SavedGist
+    |> where([sg], sg.gist_id == ^id)
+    |> Repo.aggregate(:count)
+  end
+
+  def saved_gist_with_user_and_gist(user_id, gist_id) do
+    SavedGist
+    |> where([sg], sg.gist_id == ^gist_id)
+    |> where([sg], sg.user_id == ^user_id)
+    |> Repo.aggregate(:count)
+  end
+
+  def delete_saved_gist_using_user_and_gist(user_id, gist_id) do
+    SavedGist
+    |> where([sg], sg.gist_id == ^gist_id)
+    |> where([sg], sg.user_id == ^user_id)
+    |> Repo.delete_all()
   end
 end

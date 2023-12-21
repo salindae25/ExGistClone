@@ -17,6 +17,13 @@
   </head>
   <body class="bg-emDark-dark antialiased overflow-auto max-h-[100vh]">
     <%= @inner_content %>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js">
+    </script>
+    <script>
+      dayjs.extend(window.dayjs_plugin_relativeTime)
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js">
     </script>
     <script

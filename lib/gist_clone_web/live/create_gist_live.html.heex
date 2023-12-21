@@ -2,49 +2,5 @@
   <h1 class="text-white font-bold text-3xl mt-20 text-center">
     Instantly share your code, notes and snippets
   </h1>
-  <.form for={@form} class="flex w-full flex-col" phx-submit="create" phx-change="validate">
-    <div class="flex flex-col justify-center px-28 space-y-4 w-full mb-10">
-      <.input
-        field={@form[:description]}
-        class="w-full h-full"
-        placeholder="Gist description..."
-        autocomplete="off"
-        phx-debounce="blur"
-      />
-      <div>
-        <div class="flex px-2 pt-2 pb-4 bg-emDark rounded-t-md border border-b-0 border-white">
-          <div class="w-[300px]">
-            <.input
-              field={@form[:name]}
-              placeholder="Filename with extension...."
-              autocomplete="off"
-              phx-debounce="blur"
-            />
-          </div>
-        </div>
-        <div id="gist-markuparea" class="flex w-full" phx-update="ignore">
-          <textarea
-            id="line-number"
-            class="w-[54px] rounded-bl-md border-r-0 text-emDark-light text-right overflow-hidden"
-            readonly
-          >
-          <%= "1\n" %>
-          </textarea>
-          <%= textarea(@form, :markup_text,
-            id: "gist-textarea",
-            phx_hook: "UpdateLineNumber",
-            class: "w-full rounded-br-md border-l-0",
-            placeholder: "Insert Code...",
-            autocomplete: "off",
-            spellcheck: "false",
-            phx_debounce: "blur"
-          ) %>
-        </div>
-      </div>
-
-      <div class="flex justify-end item-center">
-        <.button class="create_button" phx-disable-with="Creating...">Save gist</.button>
-      </div>
-    </div>
-  </.form>
+  <GistCloneWeb.Views.GistEdit.gist_form form={@form} form_submit="create" />
 </div>
