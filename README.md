@@ -3,8 +3,8 @@
 ## Introduction
 
 This project is copied from [Elixir Mentor YouTube channel](https://www.youtube.com/@elixirmentor)
-Gist Clone project. After following along first 12 Episodes. I have added other
-functionality and views based on UIs shown on 1st Episode.
+Gist Clone project. After watching the first 12 episodes and following along, 
+I have incorporated additional functionality and views inspired by the UIs showcased in the initial episode.
 
 ## Run
 
