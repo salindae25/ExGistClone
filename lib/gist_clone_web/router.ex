@@ -69,7 +69,8 @@ defmodule GistCloneWeb.Router do
       live "/create", CreateGistLive
       live "/edit", EditGistLive
       live "/gist", GistLive
-      live "/my_gists", MyGistLive
+      live "/user/my_gists", MyGistLive, :your
+      live "/user/saved", MyGistLive, :saved
       live "/all_gist", AllGistLive
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email

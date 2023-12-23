@@ -3,23 +3,23 @@ defmodule GistCloneWeb.MyGistLive do
   alias GistClone.{Gists}
 
   def mount(_params, _session, socket) do
-    gists = Gists.list_gists(socket.assigns.current_user.id)
+    gists =
+      if socket.assigns.live_action == :your,
+        do: Gists.list_gists(socket.assigns.current_user.id),
+        else: Gists.list_gist_per_user_in_saved_gist(socket.assigns.current_user.id)
+
     {:ok, assign(socket, gists: gists)}
   end
 
   def render(assigns) do
     ~H"""
-    <div class="flex w-full px-20 em-gradient pt-8" style="padding-inline:clamp(80px, 15%, 15rem)">
-    </div>
-
-    <div
-      class="flex w-full mt-20 font-brand flex-col gap-20 pb-10"
-      style="padding-inline:clamp(80px, 15%, 15rem)"
-    >
+    <GistCloneWeb.Views.GistNav.main view={
+      if @live_action == :your, do: "tabs-your-gist", else: "tabs-saved"
+    }>
       <%= for gist <- @gists do %>
         <GistCloneWeb.Views.GistList.item gist={gist} />
       <% end %>
-    </div>
+    </GistCloneWeb.Views.GistNav.main>
     """
   end
 end

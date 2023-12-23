@@ -272,6 +272,20 @@ defmodule GistClone.Gists do
     SavedGist.changeset(saved_gist, attrs)
   end
 
+  def list_gist_per_user_in_saved_gist(id) do
+    query =
+      from(sg in SavedGist,
+        where: sg.user_id == ^id,
+        join: g in assoc(sg, :gist),
+        on: sg.gist_id == g.id,
+        select: g
+      )
+
+    query
+    |> Repo.all()
+    |> Repo.preload(:user)
+  end
+
   def count_of_saved_gist_per_gist(id) do
     SavedGist
     |> where([sg], sg.gist_id == ^id)
