@@ -42,7 +42,7 @@
   </div>
 </div>
 <div
-  class="flex w-full font-brand flex-col px-20 pb-36"
+  class="flex w-full font-brand flex-col px-20 pb-8"
   style="padding-inline:clamp(80px, 15%, 15rem)"
 >
   <div class="flex px-2 py-4 font-regular text-sm  item-center  bg-emDark rounded-t-md border border-b-0 h-14 border-white">
@@ -98,7 +98,15 @@
       </pre>
   </div>
 </div>
-
+<div
+  class="flex w-full font-brand flex-col px-20 pb-36 gap-6"
+  style="padding-inline:clamp(80px, 15%, 15rem)"
+>
+  <%= for comment <- @comments do %>
+    <GistCloneWeb.Views.GistEdit.comment comment={comment} />
+  <% end %>
+  <GistCloneWeb.Views.GistEdit.comment_edit form={@form} form_submit="add_comment" />
+</div>
 <script>
   function addToClipBorad(){
   const codeText = document.querySelector("#highlighted-code-area").getAttribute("data-code")

@@ -10,6 +10,7 @@ defmodule GistClone.Account.User do
     field :confirmed_at, :naive_datetime
     has_many :gists, GistClone.Gists.Gist
     has_many :saved_gists, GistClone.Gists.SavedGist
+    has_many :comments, GistClone.Comments.Comment
     timestamps(type: :utc_datetime)
   end
 

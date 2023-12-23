@@ -4,8 +4,10 @@ defmodule GistClone.Gists do
   """
 
   import Ecto.Query, warn: false
+  require Logger
   alias GistClone.Repo
 
+  alias GistClone.Gists.SavedGist
   alias GistClone.Gists.Gist
 
   @doc """
@@ -21,6 +23,15 @@ defmodule GistClone.Gists do
     Repo.all(Gist)
   end
 
+  @doc """
+  Returns the list of gists belong to the provided user_id.
+
+  ## Examples
+
+      iex> list_gists(user_id)
+      [%Gist{}, ...]
+
+  """
   def list_gists(user_id) do
     Gist
     |> where([g], g.user_id == ^user_id)
@@ -28,28 +39,58 @@ defmodule GistClone.Gists do
     |> Repo.all()
   end
 
-  def list_gists_with_user do
-    Repo.all(Gist)
-    |> Repo.preload(:user)
-  end
-
   @doc """
-  Returns the list of gists.
+  Returns the list of gists summary that contain comment count and saved_gist count.
 
   ## Examples
 
-      iex> list_gists()
+      iex> list_gists(user_id)
       [%Gist{}, ...]
 
   """
-  def list_gists(%{"id" => id}) do
-    query = from(g in Gist, where: g.user_id == ^id, select: [:name, :markup_text, :description])
+
+  def list_gists_as_summary() do
+    comment_query =
+      from(c in GistClone.Comments.Comment,
+        group_by: c.gist_id,
+        select: %{gist_id: c.gist_id, total_comment: count(c.gist_id)}
+      )
+
+    saved_gist_query =
+      from(sg in SavedGist,
+        group_by: sg.gist_id,
+        select: %{gist_id: sg.gist_id, total_saved: count(sg.gist_id)}
+      )
+
+    query =
+      from(
+        g in Gist,
+        left_join: c in subquery(comment_query),
+        on: c.gist_id == g.id,
+        left_join: sg in subquery(saved_gist_query),
+        on: sg.gist_id == g.id,
+        join: u in assoc(g, :user),
+        select: %{
+          id: g.id,
+          name: g.name,
+          user: %{email: u.email},
+          description: g.description,
+          markup_text: g.markup_text,
+          comment_count: coalesce(c.total_comment, 0) |> selected_as(:comment_count),
+          saved_gist_count: coalesce(sg.total_saved, 0) |> selected_as(:saved_gist_count),
+          updated_at: g.updated_at,
+          inserted_at: g.inserted_at
+        },
+        order_by: [:inserted_at]
+      )
+
     Repo.all(query)
   end
 
   def get_gist_with_all!(id) do
-    Repo.get!(Gist, id)
-    |> Repo.preload([:user])
+    Gist
+    |> preload(:user)
+    |> Repo.get!(id)
   end
 
   @doc """

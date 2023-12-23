@@ -31,8 +31,9 @@ let Hooks = {};
 Hooks.DateHumanize = {
   mounted() {
     const date = this.el.getAttribute("data-date");
+    const prefix = this.el.getAttribute("data-prefix");
     if (date && dayjs) {
-      this.el.textContent = `Created ${dayjs(date).fromNow()}`;
+      this.el.textContent = `${prefix || "Created"} ${dayjs(date).fromNow()}`;
     }
   },
 };

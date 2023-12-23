@@ -16,5 +16,6 @@ defmodule GistClone.Comments.Comment do
     comment
     |> cast(attrs, [:markup_text, :user_id, :gist_id])
     |> validate_required([:markup_text, :user_id, :gist_id])
+    |> validate_length(:markup_text, min: 10)
   end
 end

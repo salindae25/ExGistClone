@@ -59,4 +59,76 @@ defmodule GistCloneWeb.Views.GistEdit do
     </.form>
     """
   end
+
+  def comment(assigns) do
+    ~H"""
+    <div class="flex w-full gap-8">
+      <img
+        src="/images/user-image.svg"
+        class="h-10 w-10 rounded-[50%] p-1 border-[1.5px] border-white"
+        alt="profile image"
+      />
+      <div class="flex flex-col w-full " id={"comment-header-"<> @comment.id} phx-update="ignore">
+        <div class="flex px-2 py-4 gap-1 font-regular text-sm item-center  bg-emDark rounded-t-md border border-b-0 h-12 border-white text-white">
+          <span>
+            <%= @comment.user.email
+            |> String.split("@")
+            |> hd %>
+          </span>
+          <span
+            id={"date-update"<> @comment.id}
+            phx-hook="DateHumanize"
+            data-prefix=" commented "
+            data-date={@comment.updated_at}
+          >
+            <%= @comment.updated_at %>
+          </span>
+        </div>
+        <div class="flex w-full min-h-[100px] px-3 py-4  rounded-b-md border-b border-x border-white  bg-emDark-dark text-white">
+          <%= @comment.markup_text %>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
+  def comment_edit(assigns) do
+    ~H"""
+    <.form
+      for={@form}
+      class="flex w-full gap-8"
+      phx-submit={@form_submit}
+      phx-change="validate_comment"
+    >
+      <img
+        src="/images/user-image.svg"
+        class="h-10 w-10 rounded-[50%] p-1 border-[1.5px] border-white"
+        alt="profile image"
+      />
+      <div class="flex flex-col w-full ">
+        <div class="flex px-2 py-4 font-regular text-sm item-center  bg-emDark rounded-t-md border border-b-0 h-12 border-white">
+        </div>
+        <div class="flex flex-col gap-3 px-3 py-4  w-full rounded-b-md border-b border-x border-white bg-emDark-dark">
+          <GistCloneWeb.CoreComponents.input field={@form[:gist_id]} style="display:none" />
+          <%= textarea(@form, :markup_text,
+            id: "comment-textarea",
+            style: "border-top:1px solid white",
+            class:
+              "w-full rounded-md border border-white bg-emDark-dark text-white placeholder:text-white h-[120px]",
+            placeholder: "Leave a message here",
+            autocomplete: "off",
+            spellcheck: "false",
+            phx_debounce: "blur"
+          ) %>
+
+          <div class="flex justify-end item-center">
+            <GistCloneWeb.CoreComponents.button class="create_button" phx-disable-with="Adding...">
+              Add
+            </GistCloneWeb.CoreComponents.button>
+          </div>
+        </div>
+      </div>
+    </.form>
+    """
+  end
 end

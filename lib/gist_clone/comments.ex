@@ -18,7 +18,16 @@ defmodule GistClone.Comments do
 
   """
   def list_comments do
-    Repo.all(Comment)
+    Comment
+    |> preload(:user)
+    |> Repo.all()
+  end
+
+  def list_comments_of_gist(id) do
+    Comment
+    |> where([c], c.gist_id == ^id)
+    |> preload(:user)
+    |> Repo.all()
   end
 
   @doc """

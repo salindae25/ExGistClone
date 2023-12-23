@@ -25,12 +25,23 @@
           <span
             id="date-update"
             phx-hook="DateHumanize"
-            data-date={gist.updated_at}
+            data-date={gist.inserted_at}
             class="text-white font-bold text-sm"
           >
-            <%= gist.updated_at %>
+            <%= gist.inserted_at %>
           </span>
           <span class="text-white text-xs font-regular capitalize"><%= gist.description %></span>
+        </div>
+        <div class="ml-auto flex gap-4 text-white">
+          <span class="flex gap-1 items-center">
+            <.icon name="hero-chat-bubble-bottom-center-text" class="w-5 h-5 " />
+            <%= gist.comment_count %>
+          </span>
+
+          <span class="flex gap-1 items-center">
+            <.icon name="hero-bookmark" class="w-5 h-5 " />
+            <%= gist.saved_gist_count %>
+          </span>
         </div>
       </div>
       <div>
